@@ -10,7 +10,7 @@ type Bill struct {
 	BaseModel   BaseModel `gorm:"embedded"`
 	TransDate   time.Time
 	CustomerID  uint
-	TableID      uint
+	TableID     uint
 	TransTypeID string
 	TransType   TransType
 	BillDetails []BillDetail

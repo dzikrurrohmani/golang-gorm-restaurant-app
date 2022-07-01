@@ -8,7 +8,7 @@ import (
 type MenuPrice struct {
 	BaseModel BaseModel `gorm:"embedded"`
 	MenuID    uint
-	Price     float32   `gorm:"not null"`
+	Price     float32 `gorm:"not null"`
 }
 
 func (MenuPrice) TableName() string {
