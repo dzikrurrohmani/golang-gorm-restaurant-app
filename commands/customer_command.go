@@ -28,9 +28,9 @@ func RegistCustomer(customerRepo repository.CustomerRepository) {
 	util.RaiseError(err)
 }
 
-func ActivateMember(customerRepo repository.CustomerRepository) {
+func ActivateMember(customerRepo repository.CustomerRepository, discountRepo repository.DiscountRepository) {
 	// Update (U)
-	memberActivationUseCase := usecase.NewMemberActivationUseCase(customerRepo)
+	memberActivationUseCase := usecase.NewMemberActivationUseCase(customerRepo, discountRepo)
 	newMember, err := memberActivationUseCase.ActivateMember("011111111111")
 	util.RaiseError(err)
 	log.Println(newMember.ToString())
