@@ -7,7 +7,7 @@ import (
 
 type Table struct {
 	BaseModel       BaseModel `gorm:"embedded"`
-	TbleDescription string
+	TableDescription string
 	IsAvailable     bool `gorm:"default:true"`
 	Bills           []Bill
 }

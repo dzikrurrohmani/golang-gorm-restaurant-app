@@ -8,43 +8,54 @@ import (
 )
 
 type TableRepository interface {
-	Create(table *model.Table) error
-	CreateBulk(tables []model.Table) error
-	FindById(id uint) (model.Table, error)
-	Update(table *model.Table, by map[string]interface{}) error
+	Create(table []*model.Table) error
+	FindBy(by map[string]interface{}) ([]model.Table, error)
+	FindAll() ([]model.Table, error)
+	UpdateBy(table *model.Table, by map[string]interface{}) error
+	Delete(table *model.Table) error
 }
-
 type tableRepository struct {
 	db *gorm.DB
 }
 
-func (d *tableRepository) Create(table *model.Table) error {
-	result := d.db.Create(table)
+func (m *tableRepository) Create(table []*model.Table) error {
+	result := m.db.Create(table)
 	return result.Error
-}
-func (d *tableRepository) CreateBulk(table []model.Table) error {
-	result := d.db.Create(table)
-	return result.Error
-}
-func (d *tableRepository) FindById(id uint) (model.Table, error) {
-	var table model.Table
-	result := d.db.First(&table, id)
-	if err := result.Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return table, nil
-		} else {
-			return table, err
-		}
-	}
-	return table, nil
 }
 
-func (d *tableRepository) Update(table *model.Table, by map[string]interface{}) error {
-	result := d.db.Model(table).Updates(by)
+func (m *tableRepository) FindBy(by map[string]interface{}) ([]model.Table, error) {
+	var tables []model.Table
+	result := m.db.Where(by).Find(&tables)
+	if err := result.Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		} else {
+			return nil, err
+		}
+	}
+
+	return tables, nil
+}
+
+func (m *tableRepository) FindAll() ([]model.Table, error) {
+	var tables []model.Table
+	result := m.db.Find(&tables)
+	if err := result.Error; err != nil {
+		return nil, err
+	}
+	return tables, nil
+}
+
+func (m *tableRepository) UpdateBy(table *model.Table, by map[string]interface{}) error {
+	result := m.db.Model(table).Updates(by)
 	if err := result.Error; err != nil {
 		return err
 	}
 	return nil
+}
+func (m *tableRepository) Delete(table *model.Table) error {
+	result := m.db.Delete(&model.Table{}, table).Error
+	return result
 }
 
 func NewTableRepository(db *gorm.DB) TableRepository {

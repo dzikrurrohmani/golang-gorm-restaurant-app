@@ -26,11 +26,11 @@ func main() {
 	// command.MenuPriceDelete(menuPriceRepo)
 
 	// SOAL 3
-	// menuPriceRepo := repository.NewMenuPriceRepository(db)
-	// command.MenuPriceCreate(menuPriceRepo)
-	// command.MenuPriceRead(menuPriceRepo)
-	// command.MenuPriceUpdate(menuPriceRepo)
-	// command.MenuPriceDelete(menuPriceRepo)
+	// tableRepo := repository.NewTableRepository(db)
+	// command.TableCreate(tableRepo)
+	// command.TableRead(tableRepo)
+	// command.TableUpdate(tableRepo)
+	// command.TableDelete(tableRepo)
 
 	// SOAL 4
 	// menuPriceRepo := repository.NewMenuPriceRepository(db)
