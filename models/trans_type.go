@@ -11,7 +11,7 @@ type TransType struct {
 }
 
 func (TransType) TableName() string {
-	return "m_table"
+	return "m_trans_type"
 }
 
 func (c *TransType) ToString() (string, error) {

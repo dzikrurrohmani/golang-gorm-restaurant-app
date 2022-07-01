@@ -44,14 +44,14 @@ func (c *Config) initDb() {
 
 	c.checkConnection(gormDB)
 
-	if dBConfig.dbVenv == "develompent" {
+	if dBConfig.dbVenv == "development" {
 		log.Println("Running in Development Environment")
 		c.db = gormDB.Debug()
 	} else if dBConfig.dbVenv == "production" {
 		log.Println("Running in Production Environment")
 		c.db = gormDB
 	} else {
-		util.PanicError(errors.New("specify environment first"))
+		util.PanicError(errors.New(fmt.Sprintf("%s in wrong environment",dBConfig.dbVenv)))
 	}
 }
 

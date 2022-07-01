@@ -3,14 +3,13 @@ package model
 import (
 	"encoding/json"
 	"errors"
-
-	"gorm.io/gorm"
 )
 
 type Table struct {
-	TableDescription string
-	IsAvailable bool `gorm:"default:true"`
-	gorm.Model
+	BaseModel       BaseModel `gorm:"embedded"`
+	TbleDescription string
+	IsAvailable     bool `gorm:"default:true"`
+	Bills           []Bill
 }
 
 func (Table) TableName() string {

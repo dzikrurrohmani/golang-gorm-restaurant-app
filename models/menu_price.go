@@ -3,16 +3,12 @@ package model
 import (
 	"encoding/json"
 	"errors"
-
-	"gorm.io/gorm"
 )
 
 type MenuPrice struct {
-	Price float32 `gorm:"not null"`
-	MenuID uint
-	Menu Menu
-	gorm.Model
-
+	BaseModel BaseModel `gorm:"embedded"`
+	MenuID    uint
+	Price     float32   `gorm:"not null"`
 }
 
 func (MenuPrice) TableName() string {

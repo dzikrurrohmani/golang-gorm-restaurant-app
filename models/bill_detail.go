@@ -3,21 +3,18 @@ package model
 import (
 	"encoding/json"
 	"errors"
-
-	"gorm.io/gorm"
 )
 
 type BillDetail struct {
+	BaseModel   BaseModel `gorm:"embedded"`
 	BillID      uint
 	MenuPriceID uint
-	Qty         int
-	gorm.Model
-	Bill      Bill
-	MenuPrice MenuPrice
+	Qty         float32
+	MenuPrice   MenuPrice
 }
 
 func (BillDetail) TableName() string {
-	return "t_billDetail"
+	return "t_bill_detail"
 }
 
 func (c *BillDetail) ToString() (string, error) {

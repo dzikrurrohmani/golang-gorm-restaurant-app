@@ -3,16 +3,15 @@ package model
 import (
 	"encoding/json"
 	"errors"
-
-	"gorm.io/gorm"
 )
 
 type Customer struct {
-	CustomerName  string      `gorm:"size:50;not null"`
-	MobilePhoneNo string      `gorm:"unique; size:13"`
-	IsMember      bool        `gorm:"default:false"`
-	Discounts     []*Discount `gorm:"many2many:m_customer_discount"`
-	gorm.Model
+	BaseModel     BaseModel `gorm:"embedded"`
+	CustomerName  string    `gorm:"size:50;not null"`
+	MobilePhoneNo string    `gorm:"unique; size:13"`
+	IsMember      bool      `gorm:"default:false"`
+	Bills         []Bill
+	Discounts     []Discount `gorm:"many2many:m_customer_discount"`
 }
 
 func (Customer) TableName() string {

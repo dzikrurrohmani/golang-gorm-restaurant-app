@@ -4,19 +4,16 @@ import (
 	"encoding/json"
 	"errors"
 	"time"
-
-	"gorm.io/gorm"
 )
 
 type Bill struct {
+	BaseModel   BaseModel `gorm:"embedded"`
 	TransDate   time.Time
 	CustomerID  uint
-	TableID     uint
-	TransTypeID uint
-	gorm.Model
-	Customer    Customer
-	Table       Table
+	TableID      uint
+	TransTypeID string
 	TransType   TransType
+	BillDetails []BillDetail
 }
 
 func (Bill) TableName() string {
