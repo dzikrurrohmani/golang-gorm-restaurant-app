@@ -1,13 +1,14 @@
 package model
 
 import (
+	"database/sql"
 	"encoding/json"
 	"errors"
 )
 
 type MenuPrice struct {
 	BaseModel BaseModel `gorm:"embedded"`
-	MenuID    uint
+	MenuID    sql.NullInt64
 	Price     float32 `gorm:"not null"`
 }
 

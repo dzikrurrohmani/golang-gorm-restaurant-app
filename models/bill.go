@@ -12,7 +12,6 @@ type Bill struct {
 	CustomerID  uint
 	TableID     uint
 	TransTypeID string
-	TransType   TransType
 	BillDetails []BillDetail
 }
 

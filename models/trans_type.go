@@ -8,6 +8,7 @@ import (
 type TransType struct {
 	ID          string `gorm:"primaryKey"`
 	Description string
+	Bills       []Bill
 }
 
 func (TransType) TableName() string {

@@ -8,7 +8,7 @@ import (
 type Discount struct {
 	BaseModel   BaseModel `gorm:"embedded"`
 	Description string
-	Percentage  uint `gorm:"pct"`
+	Pct         uint
 	// Customers   []Customer `gorm:"many2many:m_customer_discount"`
 }
 

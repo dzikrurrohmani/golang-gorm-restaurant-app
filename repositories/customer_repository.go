@@ -8,72 +8,64 @@ import (
 )
 
 type CustomerRepository interface {
-	Create(customer *model.Customer) error
-	FindById(id uint) (model.Customer, error)
-	FindAllBy(preload string, condition string, searchValue ...interface{}) ([]model.Customer, error)
-	Update(customer *model.Customer, by map[string]interface{}) error
-	Count() (int64, error)
+	Create(customer []*model.Customer) error
+	FindBy(by map[string]interface{}) ([]model.Customer, error)
+	FindAll() ([]model.Customer, error)
+	UpdateBy(customer *model.Customer, by map[string]interface{}) error
+	Delete(customer *model.Customer) error
+	UpdateAssociation(assocModel *model.Customer, assocName string, assocNewValue interface{}) error
 }
 type customerRepository struct {
 	db *gorm.DB
 }
 
-func (c *customerRepository) Create(customer *model.Customer) error {
-	result := c.db.Create(customer)
+func (m *customerRepository) Create(customer []*model.Customer) error {
+	result := m.db.Create(customer)
 	return result.Error
 }
 
-func (c *customerRepository) FindById(id uint) (model.Customer, error) {
-	var customer model.Customer
-	result := c.db.First(&customer, id)
+func (m *customerRepository) FindBy(by map[string]interface{}) ([]model.Customer, error) {
+	var customers []model.Customer
+	result := m.db.Where(by).Find(&customers)
 	if err := result.Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return customer, nil
+			return nil, nil
 		} else {
-			return customer, err
-		}
-	}
-	return customer, nil
-}
-func (c *customerRepository) FindAllBy(preload string, condition string, searchValue ...interface{}) ([]model.Customer, error) {
-	var customers []model.Customer
-	if preload == "" {
-		result := c.db.Where(condition, searchValue...).Find(&customers)
-		if err := result.Error; err != nil {
-			if errors.Is(err, gorm.ErrRecordNotFound) {
-				return nil, nil
-			} else {
-				return nil, err
-			}
-		}
-	} else {
-		result := c.db.Preload(preload).Where(condition, searchValue...).Find(&customers)
-		if err := result.Error; err != nil {
-			if errors.Is(err, gorm.ErrRecordNotFound) {
-				return nil, nil
-			} else {
-				return nil, err
-			}
+			return nil, err
 		}
 	}
 
 	return customers, nil
 }
 
-func (c *customerRepository) Update(customer *model.Customer, by map[string]interface{}) error {
-	result := c.db.Model(customer).Updates(by)
+func (m *customerRepository) FindAll() ([]model.Customer, error) {
+	var customers []model.Customer
+	result := m.db.Find(&customers)
+	if err := result.Error; err != nil {
+		return nil, err
+	}
+	return customers, nil
+}
+
+func (m *customerRepository) UpdateBy(customer *model.Customer, by map[string]interface{}) error {
+	result := m.db.Model(customer).Updates(by)
 	if err := result.Error; err != nil {
 		return err
 	}
 	return nil
 }
-func (c *customerRepository) Count() (int64, error) {
-	var total int64
-	result := c.db.Model(&model.Customer{}).Count(&total)
-	if err := result.Error; err != nil {
-		return 0, err
+
+func (m *customerRepository) Delete(customer *model.Customer) error {
+	result := m.db.Delete(&model.Customer{}, customer).Error
+	return result
+}
+
+func (c *customerRepository) UpdateAssociation(assocModel *model.Customer, assocName string, assocNewValue interface{}) error {
+	err := c.db.Model(assocModel).Association(assocName).Replace(assocNewValue)
+	if err != nil {
+		return err
 	}
-	return total, nil
+	return nil
 }
 
 func NewCustomerRepository(db *gorm.DB) CustomerRepository {

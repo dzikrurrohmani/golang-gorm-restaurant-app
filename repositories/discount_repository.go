@@ -8,29 +8,54 @@ import (
 )
 
 type DiscountRepository interface {
-	Create(disc *model.Discount) error
-	FindById(id uint) (model.Discount, error)
+	Create(discount []*model.Discount) error
+	FindBy(by map[string]interface{}) ([]model.Discount, error)
+	FindAll() ([]model.Discount, error)
+	UpdateBy(discount *model.Discount, by map[string]interface{}) error
+	Delete(discount *model.Discount) error
 }
-
 type discountRepository struct {
 	db *gorm.DB
 }
 
-func (d *discountRepository) Create(disc *model.Discount) error {
-	result := d.db.Create(disc)
+func (m *discountRepository) Create(discount []*model.Discount) error {
+	result := m.db.Create(discount)
 	return result.Error
 }
-func (d *discountRepository) FindById(id uint) (model.Discount, error) {
-	var disc model.Discount
-	result := d.db.First(&disc, id)
+
+func (m *discountRepository) FindBy(by map[string]interface{}) ([]model.Discount, error) {
+	var discounts []model.Discount
+	result := m.db.Where(by).Find(&discounts)
 	if err := result.Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return disc, nil
+			return nil, nil
 		} else {
-			return disc, err
+			return nil, err
 		}
 	}
-	return disc, nil
+
+	return discounts, nil
+}
+
+func (m *discountRepository) FindAll() ([]model.Discount, error) {
+	var discounts []model.Discount
+	result := m.db.Find(&discounts)
+	if err := result.Error; err != nil {
+		return nil, err
+	}
+	return discounts, nil
+}
+
+func (m *discountRepository) UpdateBy(discount *model.Discount, by map[string]interface{}) error {
+	result := m.db.Model(discount).Updates(by)
+	if err := result.Error; err != nil {
+		return err
+	}
+	return nil
+}
+func (m *discountRepository) Delete(discount *model.Discount) error {
+	result := m.db.Delete(&model.Discount{}, discount).Error
+	return result
 }
 
 func NewDiscountRepository(db *gorm.DB) DiscountRepository {

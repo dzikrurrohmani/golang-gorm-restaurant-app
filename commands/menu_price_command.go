@@ -1,6 +1,7 @@
 package command
 
 import (
+	"database/sql"
 	model "livecode-gorm-wmb/models"
 	repository "livecode-gorm-wmb/repositories"
 	usecase "livecode-gorm-wmb/usecases/menu_price"
@@ -13,15 +14,14 @@ func MenuPriceCreate(menuPriceRepo repository.MenuPriceRepository) {
 	CreateMenuPriceUseCase := usecase.NewCreateMenuPriceUseCase(menuPriceRepo)
 	menuPrice01 := model.MenuPrice{
 		Price: 2000,
-		MenuID: 5,
 	}
 	menuPrice02 := model.MenuPrice{
 		Price: 5000,
-		MenuID: 6,
+		MenuID: sql.NullInt64{Int64: 2, Valid: true},
 	}
 	menuPrice03 := model.MenuPrice{
 		Price: 10000,
-		MenuID: 7,
+		MenuID: sql.NullInt64{Int64: 3, Valid: true},
 	}
 	err := CreateMenuPriceUseCase.CreateMenuPrice([]*model.MenuPrice{&menuPrice01, &menuPrice02, &menuPrice03})
 	util.RaiseError(err)
@@ -63,7 +63,7 @@ func MenuPriceUpdate(menuPriceRepo repository.MenuPriceRepository) {
 func MenuPriceDelete(menuPriceRepo repository.MenuPriceRepository) {
 	// Cari menuPrice yang ingin di update
 	ReadMenuPriceUseCase := usecase.NewReadMenuPriceUseCase(menuPriceRepo)
-	menuPricewithID, err := ReadMenuPriceUseCase.ReadMenuPriceById(3)
+	menuPricewithID, err := ReadMenuPriceUseCase.ReadMenuPriceById(1)
 	util.RaiseError(err)
 	log.Println(menuPricewithID)
 
@@ -72,7 +72,7 @@ func MenuPriceDelete(menuPriceRepo repository.MenuPriceRepository) {
 	DeleteMenuPriceUseCase.DeleteMenuPrice(&menuPricewithID)
 
 	// Dicetak kembali untuk dicek apakah sudah berubah
-	menuPricewithID, err = ReadMenuPriceUseCase.ReadMenuPriceById(3)
+	menuPricewithID, err = ReadMenuPriceUseCase.ReadMenuPriceById(1)
 	util.RaiseError(err)
 	log.Println(menuPricewithID)
 }
