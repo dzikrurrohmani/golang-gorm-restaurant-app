@@ -3,7 +3,6 @@ package main
 import (
 	command "livecode-gorm-wmb/commands"
 	"livecode-gorm-wmb/config"
-	"livecode-gorm-wmb/migration"
 	repository "livecode-gorm-wmb/repositories"
 )
 
@@ -14,7 +13,7 @@ func main() {
 	db := config.DbConn()
 	defer config.DbClose()
 
-	migration.MigrateDb(db)
+	// migration.MigrateDb(db)
 
 	// // SOAL 1
 	// menuRepo := repository.NewMenuRepository(db)
@@ -31,7 +30,7 @@ func main() {
 	// command.MenuPriceDelete(menuPriceRepo)
 
 	// // SOAL 3
-	// tableRepo := repository.NewTableRepository(db)
+	tableRepo := repository.NewTableRepository(db)
 	// command.TableCreate(tableRepo)
 	// command.TableRead(tableRepo)
 	// command.TableUpdate(tableRepo)
@@ -46,24 +45,24 @@ func main() {
 
 	// // SOAL 5
 	discountRepo := repository.NewDiscountRepository(db)
-	command.DiscountCreate(discountRepo)
+	// command.DiscountCreate(discountRepo)
 	// command.DiscountRead(discountRepo)
 	// command.DiscountUpdate(discountRepo)
 	// command.DiscountDelete(discountRepo)
 
 	// // SOAL 6
-	// customerRepo := repository.NewCustomerRepository(db)
+	customerRepo := repository.NewCustomerRepository(db)
 	// command.RegistCustomer(customerRepo)
 
 	// // SOAL 7
-	// command.ActivateMember(customerRepo)
+	command.ActivateMember(customerRepo, discountRepo)
 
 	// // SOAL 8
-	// billRepo := repository.NewBillRepository(db)
+	billRepo := repository.NewBillRepository(db)
 	// command.BillCreate(billRepo, tableRepo)
 
 	// // SOAL 9
-	// command.BillPayment(billRepo, tableRepo)
+	command.BillPayment(billRepo, tableRepo)
 }
 
 // DROP SCHEMA public CASCADE;

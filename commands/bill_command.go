@@ -36,6 +36,6 @@ func BillCreate(billRepo repository.BillRepository, tableRepo repository.TableRe
 func BillPayment(billRepo repository.BillRepository, tableRepo repository.TableRepository) {
 	// Update (U)
 	customerPaymentUseCase := usecase.NewCustomerPaymentUseCase(billRepo, tableRepo)
-	err := customerPaymentUseCase.OrderPayment(1)
+	err := customerPaymentUseCase.OrderPayment(3)
 	util.RaiseError(err)
 }

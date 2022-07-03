@@ -36,7 +36,7 @@ func (m *memberActivationUseCase) ActivateMember(phoneNumber string) (model.Cust
 	fmt.Println("Aktivasi member berhasil.")
 	// Belum selesai tambah discount
 	discountSlice, _ := m.discountRepo.FindBy(map[string]interface{}{"id": 2})
-	err = m.custRepo.UpdateAssociation(&customerSelected, "Discounts", discountSlice[0])
+	err = m.custRepo.UpdateAssociation(&customerSelected, "Discounts", &discountSlice[0])
 	if err != nil {
 		fmt.Println("gagal menambahkan previlledge discount")
 	}

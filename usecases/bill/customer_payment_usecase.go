@@ -17,7 +17,7 @@ type customerPaymentUseCase struct {
 }
 
 func (c *customerPaymentUseCase) PrintBill(billId uint) error {
-	billSlice, err := c.billRepo.FindBy(map[string]interface{}{"id": billId}, []string{"BillDetails"})
+	billSlice, err := c.billRepo.FindBy(map[string]interface{}{"id": billId}, []string{"BillDetails", "BillDetails.MenuPrice"})
 	if err != nil {
 		fmt.Println("Informasi bill tidak ditemukan.")
 		return err
@@ -38,9 +38,8 @@ func (c *customerPaymentUseCase) OrderPayment(billId uint) error {
 		return err
 	}
 	tableSelected := tableSlice[0]
-	tableSelected.IsAvailable = false
 	// Tidak perlu transactional karena yang diupdate hanya table
-	err = c.tableRepo.UpdateBy(&tableSelected, map[string]interface{}{"id": billSlice[0].TableID})
+	err = c.tableRepo.UpdateBy(&tableSelected, map[string]interface{}{"is_available": true})
 	if err != nil {
 		fmt.Println("Update informasi meja gagal dilakukan.")
 		return err

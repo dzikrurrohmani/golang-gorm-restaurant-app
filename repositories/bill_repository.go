@@ -31,6 +31,13 @@ func (m *billRepository) Create(bill *model.Bill, table *model.Table) error {
 		}
 		return err
 	}
+	err = m.db.Model(table).Updates(map[string]interface{}{"is_available": "false"}).Error
+	if err != nil {
+		if e := tx.Rollback().Error; e!= nil {
+			return e
+		}
+		return err
+	}
 	if err = tx.Commit().Error; err != nil {
 		return err
 	}
